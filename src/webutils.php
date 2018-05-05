@@ -105,14 +105,6 @@
 	}
 
 	/**
-	 * [assets description]
-	 * @return [type] [description]
-	 */
-	function assets(){
-
-	}
-
-	/**
 	 * get content between two tags by substring method
 	 * @param  string $string
 	 * @param  string $tag1
@@ -194,7 +186,116 @@
 		return $pool;
 	}
 
+	/**
+	 * translit string
+	 * @param  [type] $string [description]
+	 * @param  string $lang   [description]
+	 * @return [type]         [description]
+	 */
 	function translit($string, $lang = 'ru')
 	{
 		return transliterator_transliterate('Any-Latin; Latin-ASCII; Lower()', $string);
 	}
+
+	/**
+	 * @see https://github.com/mrclay/minify
+	 * generate js include html code
+	 * @param  array  $items      web path to files
+	 * @param  boolean $production production mode
+	 * @param  array  $with_build files with build
+	 * @param  int  $build      build number
+	 * @return void
+	 */
+	function gen_js($items, $production = false, $with_build = '', $build)
+	{
+    	if ($production) {
+    		$files = 'f=' . join(',', $items);
+    		?>
+    		<script type="text/javascript" src="<?php echo www_root?>min/?<?php echo $files?>"></script>
+    		<?php
+    	} else {
+    		foreach ($items as $key => $value) {
+    			$add = '';
+    			if ($with_build && in_array(basename($value), $with_build)){
+    				$add = '?v=' . $build;
+    			}
+    			?>
+    			<script type="text/javascript" src="<?php echo $value . $add?>"></script>
+        		<?php
+    		}
+    	}
+	}
+
+	/**
+	 * @see https://github.com/mrclay/minify
+	 * generate css include html code
+	 * @param  array  $items      web path to files
+	 * @param  boolean $production production mode
+	 * @param  array  $with_build files with build
+	 * @param  int  $build      build number
+	 * @return void
+	 */
+	function gen_css($items, $production = false, $with_build = '', $build)
+	{
+    	if ($production) {
+	   		$files = 'f=' . join(',', $items);
+    		?>
+			<link rel="stylesheet" href="<?php echo www_root?>min/?<?php echo $files?>" type="text/css" media="screen,projection" />
+    		<?php
+    	} else {
+    		foreach ($items as $key => $value) {
+    			$add = '';
+    			if ($with_build && in_array(basename($value), $with_build)){
+    				$add = '?v=' . $build;
+    			}
+    			?>
+        		<link rel="stylesheet" href="<?php echo $value . $add?>" type="text/css" media="screen,projection" />
+        		<?php
+    		}
+    	}
+	}
+
+	/**
+	 * email to
+	 * @param  [type] $to      [description]
+	 * @param  [type] $subject [description]
+	 * @param  [type] $msg     [description]
+	 * @param  [type] $from    [description]
+	 * @return [type]          [description]
+	 */
+	function mail($to, $subject, $msg, $from)
+	{
+		$headers   = array();
+		$headers[] = "Content-type: text/plain; charset=utf-8";
+		$headers[] = "From: ".$from['title']." <".$from['email'].">";
+		//$headers[] = "Bcc: JJ Chong <bcc@domain2.com>";
+		$headers[] = "Reply-To: ".$from['email'];
+		$headers[] = "X-Mailer: PHP/".phpversion();
+		return mail($to['title']." <".$to['email'].">", $subject, $msg, join("\r\n", $headers), '-f'.$from['email']);
+	}
+
+	/**
+	 * escape string for html
+	 * @param  [type] $string [description]
+	 * @return [type]         [description]
+	 */
+	function attr_esc($string)
+	{
+		return htmlspecialchars($string, ENT_COMPAT | ENT_HTML5, 'utf-8');
+	}
+
+	/**
+	 * redirect
+	 * @param  [type]  $url    [description]
+	 * @param  boolean $client [description]
+	 * @return [type]          [description]
+	 */
+	function redirect($url, $client = true)
+	{
+		if ($client) {
+			?><script type="text/javascript">location.replace('<?php echo $url?>');</script><?php
+		} else {
+			header('location: '.$url);
+		}
+	}
+

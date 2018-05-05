@@ -11,13 +11,6 @@
 		}
 	}
 
-	if (!function_exists('asset'))
-	{
-		function asset() {
-			return call_user_func_array('Applehail\Webutils\asset', func_get_args());
-		}
-	}
-
 	if (!function_exists('logger'))
 	{
 		function logger() {
@@ -85,5 +78,40 @@
 	{
 		function get_cpu() {
 			return str_replace(array(' ', '\\', '+'), array('-', '-', '-'), mb_strtolower(translit(func_get_args())));
+		}
+	}
+
+	if (!function_exists('gen_js'))
+	{
+		function gen_js() {
+			return call_user_func_array('Applehail\Webutils\gen_js', func_get_args());
+		}
+	}
+
+	if (!function_exists('gen_css'))
+	{
+		function gen_css() {
+			return call_user_func_array('Applehail\Webutils\gen_css', func_get_args());
+		}
+	}
+
+	if (!function_exists('mail'))
+	{
+		function mail() {
+			return call_user_func_array('Applehail\Webutils\mail', func_get_args());
+		}
+	}
+
+	if (!function_exists('attr_esc'))
+	{
+		function attr_esc() {
+			return call_user_func_array('Applehail\Webutils\attr_esc', func_get_args());
+		}
+	}
+
+	if (!function_exists('redirect'))
+	{
+		function redirect() {
+			return call_user_func_array('Applehail\Webutils\redirect', func_get_args());
 		}
 	}
