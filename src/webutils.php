@@ -196,5 +196,5 @@
 
 	function translit($string, $lang = 'ru')
 	{
-		return Translit::object()->convert($string, $lang);
+		return transliterator_transliterate('Any-Latin; Latin-ASCII; Lower()', $string);
 	}

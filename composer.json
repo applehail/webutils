@@ -12,7 +12,6 @@
         "php": ">=5.3.0",
         "guzzlehttp/guzzle": "^6.3",
         "cache/filesystem-adapter": "^1.0",
-        "ashtokalo/php-translit": "dev-master",
         "zendframework/zend-config": "^2.6",
         "monolog/monolog": "^1.22",
         "symfony/var-dumper": "^3.2"
