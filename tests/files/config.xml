@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+	<group1>
+		<param1>value1</param1>
+		<param2>value2</param2>
+	</group1>
+	<group2>
+		<param3>value3</param3>
+	</group2>
+</config>
