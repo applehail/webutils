@@ -115,3 +115,10 @@
 			return call_user_func_array('Applehail\Webutils\redirect', func_get_args());
 		}
 	}
+
+	if (!function_exists('request'))
+	{
+		function request() {
+			return call_user_func_array('Applehail\Webutils\request', func_get_args());
+		}
+	}

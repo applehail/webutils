@@ -4,8 +4,9 @@
 	use League\Flysystem\Adapter\Local;
 	use League\Flysystem\Filesystem;
 	use Cache\Adapter\Filesystem\FilesystemCachePool;
+    use GuzzleHttp\Client;
 
-	require_once(__DIR__ . '/utils_functions.php');
+	require_once(__DIR__ . '/webutils_functions.php');
 
 	/**
 	 * @see https://zendframework.github.io/zend-config/
@@ -77,7 +78,7 @@
 	 */
 	function file_get_ext($fileName)
 	{
-		$ext = strtolower( substr (strrchr ($fn,'.'), 1 ) );
+		$ext = strtolower( substr (strrchr ($fileName,'.'), 1 ) );
 		$ext = explode('?', $ext);
 		return $ext[0];
 	}
@@ -148,7 +149,7 @@
 	 * get items by regexp
 	 * @param  string $text text
 	 * @param  string $tag  regexp
-	 * @return array       array of results
+	 * @return array       array of results [[1=>first, 2=>second], [1=>...] ]
 	 */
 	function get_tag_array($text, $tag)
 	{
@@ -299,3 +300,68 @@
 		}
 	}
 
+
+    /**
+     * http request
+     * @param  string  $url
+     * @param  string  $type            POST / GET / json
+     * @param  array   $params          data to request
+     * @param  array   $params_headers  request headers
+     * @param  boolean $redirects
+     * @param  string  $ref             referer
+     * @param  array   &$headers        array for headers or null
+     * @param  integer $connect_timeout sec
+     * @param  boolean $debug
+     * @return string                   result
+     */
+    function request($url, $type = 'POST', $params = [], $params_headers = [], $redirects = true, $ref = '', &$headers = null, $connect_timeout = 3, $debug = false)
+    {
+        $guzzle = new \GuzzleHttp\Client(['cookies' => true, 'connect_timeout' => $connect_timeout]);
+
+        switch ($type) {
+            case 'GET':
+                $paramsType = 'request';
+                break;
+            case 'POST':
+                $paramsType = 'form_params';
+                break;
+            case 'json':
+                $type = 'POST';
+                $paramsType = GuzzleHttp\RequestOptions::JSON;
+                break;
+            default:
+                die('error getPage type');
+                break;
+        }
+        $options = ['allow_redirects' => ['referer' => true],  $paramsType => $params];
+        if (!$redirects){
+            $options['allow_redirects'] = false;
+        }
+        $options['headers'] = [
+            'User-Agent' => 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36',
+            //'Referer' => 'https://twitter.com/',
+            //'Origin' => 'https://twitter.com/',
+        ];
+        $options['headers'] = array_merge($options['headers'], $params_headers);
+        if ($ref){
+            $options['headers']['Referer'] = $ref;
+        }
+
+        $res = $guzzle->request($type, $url, $options);
+        if (!$redirects){
+            //d($res);
+        }
+        if ($debug){
+            d($type . ' : ' . $url);
+            d($options);
+            d($res->getStatusCode());
+        }
+
+        $data = $res->getBody()->getContents();
+        if ($headers != null){
+            $headers = $res->getHeaders();
+        }
+        //d($data); die();
+        return $data;
+
+    }
