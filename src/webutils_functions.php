@@ -122,3 +122,31 @@
 			return call_user_func_array('Applehail\Webutils\request', func_get_args());
 		}
 	}
+
+	if (!function_exists('add_to_file'))
+	{
+		function add_to_file() {
+			return call_user_func_array('Applehail\Webutils\add_to_file', func_get_args());
+		}
+	}
+
+	if (!function_exists('puny_to_text'))
+	{
+		function puny_to_text() {
+			return call_user_func_array('Applehail\Webutils\puny_to_text', func_get_args());
+		}
+	}
+
+	if (!function_exists('get_youtube_img'))
+	{
+		function get_youtube_img() {
+			return call_user_func_array('Applehail\Webutils\get_youtube_img', func_get_args());
+		}
+	}
+
+	if (!function_exists('get_youtube_player'))
+	{
+		function get_youtube_player() {
+			return call_user_func_array('Applehail\Webutils\get_youtube_player', func_get_args());
+		}
+	}

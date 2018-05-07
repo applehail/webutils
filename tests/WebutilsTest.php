@@ -75,6 +75,7 @@
 			$this->assertEquals(array(array(1 => '1'), array(1 => '2')), Applehail\get_tag_array('<p>1</p><p>2</p> text', '<p>(.*?)</p>'));
 			$this->assertEquals('test', Applehail\translit('тест'));
 			$this->assertEquals('&quot;test&quot;&gt;&lt;', Applehail\attr_esc('"test"><'));
+			$this->assertEquals('красиваяпечать.рф', Applehail\puny_to_text('http://xn--80aaagqpm8belr2d9ctb.xn--p1ai/%D0%BF%D0%B5%D1%87%D0%B0%D1%82%D1%8C'));
 		}
 
 		public function testFileCache()
@@ -95,7 +96,8 @@
 
 		public function testRequest()
 		{
-			$test = Applehail\request('https://ya.ru', 'GET');
+			$request = Applehail\request('https://ya.ru', 'GET');
+			$test = $request->getBody()->getContents();
 			$this->assertNotNull($test);
 		}
 
@@ -107,4 +109,14 @@
 			$this->assertEquals('value1', $config->group1->get('param1'));
 			$this->assertEquals('not_found', $config->group1->get('bazzz', 'not_found'));
 		}
+
+		public function checkAddToFile()
+		{
+
+			$fileName = __DIR__ . '/files/test.txt';
+			Applehail\add_to_file($fileName, 'test');
+			$this->assertStringNotEqualsFile($fileName, '');
+			unlink($fileName);
+		}
+
 	}
